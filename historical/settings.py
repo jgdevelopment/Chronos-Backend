@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'rm-3ve))gcfld(p(h(c2f+1ax080+k8=x%@t&(7=#2jld)0oaj'
+#SECRET_KEY = 'rm-3ve))gcfld(p(h(c2f+1ax080+k8=x%@t&(7=#2jld)0oaj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -70,8 +70,8 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 import dj_database_url
-DATABASES['default'] =  dj_database_url.config()
-
+DATABASES['default'] =  dj_database_url.config(
+default = 'postgres://jason:dum04sci@localhost:5432/historical')
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -150,6 +150,7 @@ STATICFILES_FINDERS = (
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '&6dbms-2pu2vssd_=6!p#0jnd$)e8ns)l)k&_rl10$&76d0*&t'
+NOAA_TOKEN = 'RhaDMfZbDrVFmhlUgbApjuETdNqJyvYI'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -189,6 +190,7 @@ INSTALLED_APPS = (
     'bls',
     'stocks',
     'weather',
+    'music',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:

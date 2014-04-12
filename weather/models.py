@@ -4,8 +4,8 @@ class Location(models.Model):
 	stationId = models.CharField(max_length=200)
 	startDate = models.DateTimeField()
 	endDate = models.DateTimeField()
-	longitude = models.FloatField()
 	latitude = models.FloatField()
+	longitude = models.FloatField()
 	def __unicode__(self):
 		return '%s: %.4f, %.4f'%(self.stationId, self.longitude, self.latitude) #changed from self.name to self.stationId
 	def date(self):
