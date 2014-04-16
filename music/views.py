@@ -7,14 +7,24 @@ from django.views import generic
 from django.forms.models import model_to_dict
 from json import dumps
 from datetime import datetime
+from django.utils.functional import Promise
+from django.utils.encoding import force_text
+from django.core.serializers.json import DjangoJSONEncoder
 
-def topSong_view(request,year,month,day):
+class DjangoJSONEncoder(DjangoJSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Promise):
+            return force_text(obj)
+        return super(DjangoJSONEncoder, self).default(obj)
+#add find closest date function
+#1950-1958 error artist added to Song Title because of #<sup> is contained with <td>.
+def song_view(request):
 	year = int(request.GET['year'])
 	month = int(request.GET['month'])
 	day = int(request.GET['day'])
 	date = datetime(year,month,day)
 	topSong=list(TopSong.objects.filter(date=date))
 	if topSong:
-		return HttpResponse(dumps(model_to_dict(topSong[0],exclude=['id'])))
+		return HttpResponse(dumps(model_to_dict(topSong[0],exclude=['id']), cls=DjangoJSONEncoder))
 	else:
 		return HttpResponse(dumps(dict(error = 'no such object')))

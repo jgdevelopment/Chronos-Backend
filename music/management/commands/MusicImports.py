@@ -12,6 +12,8 @@ def getStringContents(element):
 			contents+=child
 		if element.name == 'br':
 			break
+		if element.name == '/a':
+			break
 	return contents
 
 def getArtist(element):

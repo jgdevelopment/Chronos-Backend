@@ -10,7 +10,7 @@ from json import dumps
 def product_view(request,product):
 	month = int(request.GET['month'])
 	year = int(request.GET['year'])
-	products=list(AveragePrice.objects.filter(year=year, month = month, product=product)) 
+	products=list(AveragePrice.objects.filter(year=year, month = month, product=product))
 	if products:
 		return HttpResponse(dumps(model_to_dict(products[0],exclude=['id'])))
 	else:

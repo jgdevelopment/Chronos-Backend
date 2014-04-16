@@ -1,9 +1,12 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
+from weather.models import Location
 import urllib2
 import json
 import csv
-
+from datetime import datetime
+from django.utils import datetime_safe
+#patch django mktime function leap seconds
 class Command(BaseCommand):
 
 	def __init__(self, **kwargs):
@@ -20,16 +23,21 @@ class Command(BaseCommand):
 			locations = json.loads(r.read())
 			for location in locations['results']:
 				zipCode = location['id'][4:]
+				if zipCode not in zips:
+					continue
 				latitude,longitude = zips[zipCode]
-				mindate = location['mindate']
-				maxdate = location['maxdate']
+				print location
+				mindate = datetime.strptime(location['mindate'],"%Y-%m-%d")
+				maxdate = datetime.strptime(location['maxdate'],"%Y-%m-%d")
 				location = Location(
 					stationId= zipCode,
 					startDate = mindate,
 					endDate = maxdate, 
 					latitude = latitude,
 					longitude = longitude)
-				
+				print location
+				#import pdb; pdb.set_trace()
+				location.save()
 			metadata = locations['metadata']['resultset']
 			limit = metadata['limit']
 			offset = metadata['offset']
