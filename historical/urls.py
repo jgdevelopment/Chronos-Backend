@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^stocks/', include('stocks.urls')),
     url(r'^bls/', include('bls.urls')),
     url(r'^music/', include('music.urls')),
+    url(r'^news/', include('news.urls')),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
