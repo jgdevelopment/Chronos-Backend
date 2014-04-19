@@ -8,19 +8,32 @@ import re
 def getStringContents(element):
 	contents = ""
 	for child in element.descendants:
+		#import pdb; pdb.set_trace()
 		if isinstance(child,NavigableString):
 			contents+=child
-		if element.name == 'br':
+		if child.name == 'br':
 			break
-		if element.name == '/a':
+	return contents
+
+def getSong(element):
+	contents = ""
+	for child in element.descendants:
+		#import pdb; pdb.set_trace()
+		if isinstance(child,NavigableString):
+			contents+=child
+		if child.name == 'sup':
 			break
 	return contents
 
 def getArtist(element):
-	if not element:
-		import pdb; pdb.set_trace() 
 	artist = element.find('sup')
-	return getStringContents(artist)
+	contents = ""
+	for child in artist.descendants:
+		if isinstance(child,NavigableString):
+			contents+=child
+		if element.name == 'br':
+			break
+	return contents
 
 def getUrlForYear(year):
 	if year>=1959:
@@ -35,19 +48,25 @@ def getSinglesForYear(year):
 	skipArtist = 0
 	topSongs = list()
 	print year
+	#import pdb; pdb.set_trace()
 	for item in soup.find_all('table'):
 		headers = item.find_all('th')
 		headerStrings = [header.string for header in headers]
 		th = item.find('th')
 		if not th or not th.string:
-			continue
+			if not item.tr:
+				continue
+			if not item.tr.td:
+				continue
+			if not item.tr.td.b:
+				continue
+			th = item.tr.td.b		
 		if th.string.lower() == 'issue date':
 			for row in item.find_all('tr'):
 				date = row.find(['th','td'])
 				if date.string.lower() == 'issue date':
 					continue
 				if 'Artist(s)' in headerStrings:
-					#import pdb; pdb.set_trace()
 					if skipSongs == 0:
 						songTD = date.find_next_sibling('td')
 						skipSongs = int(songTD.get('rowspan',1))-1
@@ -57,7 +76,6 @@ def getSinglesForYear(year):
 							artistTD = songTD.find_next_sibling('td')
 							artist = getStringContents(artistTD)
 							skipArtist= int(artistTD.get('rowspan',1))
-						# import pdb; pdb.set_trace()
 					else:
 						skipSongs-=1
 					skipArtist-=1
@@ -65,11 +83,11 @@ def getSinglesForYear(year):
 					if skipSongs == 0:
 						songTD = date.find_next_sibling('td')
 						skipSongs = int(songTD.get('rowspan',1))-1
-						song = getStringContents(songTD)
+						song = getSong(songTD)
 						artist = getArtist(songTD)
 					else:
 						skipSongs-=1
-
+				song = song.replace('"','')
 				date = date.string
 				#print ord(date[7])
 				month,day = re.split('[ \t\n\xA0]+',date, maxsplit = 2)
