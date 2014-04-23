@@ -88,6 +88,7 @@ def getSinglesForYear(year):
 					else:
 						skipSongs-=1
 				song = song.replace('"','')
+				artist = artist.replace('"','')
 				date = date.string
 				#print ord(date[7])
 				month,day = re.split('[ \t\n\xA0]+',date, maxsplit = 2)

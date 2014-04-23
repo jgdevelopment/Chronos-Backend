@@ -28,6 +28,9 @@ def news_view(request):
     news['title']=article['webTitle']
     news['date']=article['webPublicationDate']
     news['url']=article['webUrl']
-    master[index] = news
-    index= index+1
+    if 'crossword' in news['title'].lower() or 'sudoku' in news['title'].lower():
+      continue
+    else:
+      master[index] = news
+      index= index+1
   return HttpResponse(dumps(master))
