@@ -7,12 +7,13 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'historical.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-
-    url(r'^stocks/', include('stocks.urls')),
+	url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    url(r'^admin/', include(admin.site.urls)),
     url(r'^bls/', include('bls.urls')),
     url(r'^music/', include('music.urls')),
     url(r'^news/', include('news.urls')),
     url(r'^sports/', include('sports.urls')),
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^stocks/', include('stocks.urls')),
+    url(r'^weather/', include('weather.urls')),
+   
 )

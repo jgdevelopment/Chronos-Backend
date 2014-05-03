@@ -22,8 +22,7 @@ def song_view(request):
 	month = int(request.GET['month'])
 	day = int(request.GET['day'])
 	date = datetime(year,month,day)
-	topSong=list(TopSong.objects.filter(date__gte=date
-		).order_by('date'))
+	topSong=list(TopSong.objects.filter(date__gte=date).order_by('date').limit(1))
 	if topSong:
 		return HttpResponse(dumps(model_to_dict(topSong[0],exclude=['id']), cls=DjangoJSONEncoder))
 	else:

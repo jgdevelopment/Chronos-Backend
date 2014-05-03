@@ -10,6 +10,7 @@
 # from json import dumps
 # import csv
 # import re
+# make 2-d array
 # # mlb: http://www.shrpsports.com/mlb/stand.php?link=Y&season=2014&divcnf=div&month=May&date=4
 # # nba: http://www.shrpsports.com/nba/stand.php?link=Y&season=2014&divcnf=div&month=May&date=4
 # # nfl(by week): http://www.shrpsports.com/nfl/stand.php?link=Y&season=2012&divcnf=div&week=Week%2017
