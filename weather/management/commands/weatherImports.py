@@ -14,7 +14,6 @@ from json import dumps
 import csv
 
 
-# 1: push top song to heroku (add in url)
 # input zip code, day, month, year
 # take inputed zip code
 # output lat and long via zip code csv
@@ -24,8 +23,6 @@ import csv
 # --> too slow? use url 4 times (for each data type) http://www.ncdc.noaa.gov/cdo-services/services/datasets/GHCND/locations/ZIP:'input zip code'/datatypes/'TMAX'/data.json?year='year'&month='month'&day='day'&token=lYpGKtvmKcABFWooIogXphDAkxDnDVBy
 # return JSON data for specific date and dataype
 # convert data value units and return values paired to their datatypes
-# to do: sports: scores, game details, standings, headlines(scrape sports-reference, maybe use specific for baseball, maybe scrap shrpsports) and news (guardian headlines)
-# objective-c to do: fix scroll-view bug (arrangement), add sports template, add iTunes music preview
 
 class Command(BaseCommand):
 	def __init__(self, **kwargs):
@@ -82,3 +79,5 @@ def invalidRow(row):
 		if row[column] == '9999' or row[column] == '-9999':
 			return True
 #build step-by-step when Tmax for station, when Tmin set Tmin, use postgres over mysql
+
+
