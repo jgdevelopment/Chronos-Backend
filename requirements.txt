@@ -3,6 +3,7 @@ PyRSS2Gen==1.0.0
 Twisted==12.0.0
 altgraph==0.9
 bdist-mpkg==0.4.4
+lxml = 3.4.0
 beautifulsoup4==4.3.2
 dj-database-url==0.2.2
 gunicorn==18.0
