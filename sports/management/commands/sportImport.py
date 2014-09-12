@@ -32,7 +32,7 @@ def getSport(sportString):
 		sport = mlb
 	if sportString == "nba":
 		sport = nba
-	year = 1980 #datetime.now().year
+	year = datetime.now().year
 	day = 1
 	month = 1
 
