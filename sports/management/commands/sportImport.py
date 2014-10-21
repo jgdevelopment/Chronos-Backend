@@ -9,11 +9,12 @@ from urlparse import urljoin
 
 monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 class SportParsingRules(object):
-	def __init__(self,sport,leagues,parseDate,getPreviousDayLink):
+	def __init__(self,sport = None,leagues = None,parseDate = None,getPreviousDayLink = None,fields = None):
 		self.leagues = leagues
 		self.name = sport
 		self.parseDate = parseDate
 		self.getPreviousDayLink = getPreviousDayLink
+		self.fields = fields
 
 def defaultGetPreviousDayLink(year, tree):
 	return tree.xpath("//a[text()='Previous Day']")[0].attrib['href']
@@ -63,9 +64,26 @@ def parseNFLDate(dateString):
 	date+=timedelta(week*7)
 	return date
 
-nba = SportParsingRules('nba',['EASTERN CONFERENCE', 'WESTERN CONFERENCE'], parseNBADate, defaultGetPreviousDayLink)
-mlb = SportParsingRules('mlb',['AMERICAN LEAGUE', 'NATIONAL LEAGUE'], parseMLBDate,defaultGetPreviousDayLink)
-nfl = SportParsingRules('nfl',['American Football Conference', 'National Football Conference'], parseNFLDate, nflGetPreviousDayLink)
+nba = SportParsingRules(
+	sport = 'nba',
+	leagues = ['EASTERN CONFERENCE', 'WESTERN CONFERENCE'],
+	parseDate = parseNBADate, 
+	getPreviousDayLink = defaultGetPreviousDayLink,
+	fields = {'record':0,'home':3,'away':4})
+
+mlb = SportParsingRules(
+	sport = 'mlb',
+	leagues = ['AMERICAN LEAGUE', 'NATIONAL LEAGUE'], 
+	parseDate = parseMLBDate,
+	getPreviousDayLink = defaultGetPreviousDayLink,
+	fields = {'record':0,'home':3,'away':4})
+
+nfl = SportParsingRules(
+	sport = 'nfl',
+	leagues = ['American Football Conference', 'National Football Conference'], 
+	parseDate = parseNFLDate, 
+	getPreviousDayLink = nflGetPreviousDayLink,
+	fields = {'record':0,'home':4,'away':5})
 
 sportDict = dict(nba=nba, mlb = mlb, nfl = nfl)
 def getSport(sportString):
@@ -90,7 +108,6 @@ def getSport(sportString):
 		day = date.day
 	else:
 		date = datetime(year+1,1,31)
-
 
 	##press previous date; if date is later than end of season, go back a year
 	url = 'http://www.shrpsports.com/%s/stand.php?link=Y&season=%d&divcnf=div&month=%s&date=%d'%(sport.name,year,month,day)
@@ -127,17 +144,13 @@ def parseSport(document, sport, year, url):
 	dateString = header[header.find("after")+6:]
 	date = sport.parseDate(dateString)
 	print date, previousDayLink
-
 	standing = {}
 	for league in sport.leagues:
 		standing[league] = {}
-		print league
 		rows = tree.xpath("//table/tr[td='%s']/../tr"%league)
-		print sport
-		import pdb;pdb.set_trace() # not working for nfl parse, hm and aw instead of home and away, first bolded text for nfl is PF not Divison
 		for element in rows:
 			if element.get('class') == 'standfont2':
-				if sport == 'nfl':
+				if sport.name == 'nfl':
 					currentDivision = str(element.xpath("td/node()")[0]).strip()
 				else:
 					currentDivision = str(element.xpath("td/b/node()")[0]).strip()
@@ -146,9 +159,9 @@ def parseSport(document, sport, year, url):
 			if element.get('class') == 'standfont1':
 				name = str(element.xpath("td/a/text()")[0])
 				stats = element.xpath("td[not(a)]/node()")
-				record = stats[0].strip()
-				home = stats[3].strip()
-				away = stats[4].strip()
+				record = stats[sport.fields['record']].strip()
+				home = stats[sport.fields['home']].strip()
+				away = stats[sport.fields['away']].strip()
 				standing[league][currentDivision][name] = dict(record=record,home=home,away=away)
 				
 	return previousDayLink, date, standing
